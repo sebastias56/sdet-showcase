@@ -1,25 +1,24 @@
 package com.showcase.tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.showcase.framework.driver.BrowserType;
+import com.showcase.framework.driver.DriverFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
 abstract class BaseTest {
 
-    protected WebDriver driver;
+  protected WebDriver driver;
 
-    @BeforeEach
-    void setUp() {
-        WebDriverManager.firefoxdriver().setup();
-        driver = new FirefoxDriver();
-    }
+  @BeforeEach
+  void setUp() {
+    driver = DriverFactory.createDriver(BrowserType.FIREFOX);
+  }
 
-    @AfterEach
-    void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+  @AfterEach
+  void tearDown() {
+    if (driver != null) {
+      driver.quit();
     }
+  }
 }
