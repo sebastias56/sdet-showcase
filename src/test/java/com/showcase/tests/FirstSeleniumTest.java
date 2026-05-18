@@ -2,15 +2,17 @@ package com.showcase.tests;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.showcase.pages.HomePage;
 import org.junit.jupiter.api.Test;
 
 class FirstSeleniumTest extends BaseTest {
 
   @Test
-  void shouldDisplayCorrectTitleOnPracticeHomePage() {
-    driver.get("https://the-internet.herokuapp.com/");
+  void shouldLoadPracticeHomePage() {
+    HomePage homePage = new HomePage(driver);
 
-    assertTrue(
-        driver.getTitle().contains("The Internet"), "Page title should contain 'The Internet'");
+    homePage.open();
+
+    assertTrue(homePage.isLoaded(), "Home page should be loaded");
   }
 }
