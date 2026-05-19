@@ -2,14 +2,12 @@ package com.showcase.pages;
 
 import org.openqa.selenium.WebDriver;
 
-public class HomePage {
+public class HomePage extends BasePage {
 
   private static final String URL = "https://the-internet.herokuapp.com/";
 
-  private final WebDriver driver;
-
   public HomePage(WebDriver driver) {
-    this.driver = driver;
+    super(driver);
   }
 
   public void open() {

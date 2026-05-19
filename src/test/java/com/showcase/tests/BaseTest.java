@@ -10,10 +10,10 @@ abstract class BaseTest {
 
   protected WebDriver driver;
 
-    @BeforeEach
-    void setUp() {
-        driver = DriverFactory.createDriver(ConfigReader.getBrowserType());
-    }
+  @BeforeEach
+  void setUp() {
+    driver = DriverFactory.createDriver(ConfigReader.getBrowserType());
+  }
 
   @AfterEach
   void tearDown() {
