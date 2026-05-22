@@ -8,8 +8,12 @@ import java.time.format.DateTimeFormatter;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class ScreenshotUtils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScreenshotUtils.class);
 
     private static final Path SCREENSHOTS_DIR = Path.of("target", "screenshots");
     private static final DateTimeFormatter TIMESTAMP_FORMAT =
@@ -32,6 +36,8 @@ public final class ScreenshotUtils {
 
             byte[] screenshot = takesScreenshot.getScreenshotAs(OutputType.BYTES);
             Files.write(screenshotPath, screenshot);
+
+            LOGGER.info("Screenshot saved: {}", screenshotPath);
 
             return screenshotPath;
         } catch (IOException | RuntimeException exception) {
