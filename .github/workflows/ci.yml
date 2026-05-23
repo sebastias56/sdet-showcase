@@ -10,8 +10,13 @@ on:
 
 jobs:
   test:
-    name: Maven Tests
+    name: Maven Tests - ${{ matrix.browser }}
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
 
     steps:
       - name: Checkout repository
@@ -24,13 +29,13 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Run tests
-        run: mvn clean test -Dbrowser=chrome -Dheadless=true
+      - name: Run tests on ${{ matrix.browser }}
+        run: mvn clean test -Dbrowser=${{ matrix.browser }} -Dheadless=true
 
       - name: Upload screenshots
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: screenshots
+          name: screenshots-${{ matrix.browser }}
           path: target/screenshots/
           if-no-files-found: ignore
