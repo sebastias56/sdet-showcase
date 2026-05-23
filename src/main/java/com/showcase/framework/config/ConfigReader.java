@@ -17,4 +17,8 @@ public final class ConfigReader {
                 "Unsupported browser: " + browser + ". Supported values: chrome, firefox");
         };
     }
+
+    public static boolean getHeadless() {
+        return Boolean.parseBoolean(System.getProperty("headless", "false"));
+    }
 }
