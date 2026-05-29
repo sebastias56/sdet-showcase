@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.showcase.pages.LoginPage;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class LoginTest extends BaseTest {
 
@@ -20,30 +22,22 @@ class LoginTest extends BaseTest {
         "Success login message should be displayed");
   }
 
-  @Test
-  void shouldShowErrorMessageWithInvalidUsername() {
+  @ParameterizedTest(name = "username={0}, expectedMessage={2}")
+  @CsvSource({
+    "invalid-user, SuperSecretPassword!, Your username is invalid!",
+    "tomsmith, invalid-password, Your password is invalid!"
+  })
+  void shouldShowErrorMessageWithInvalidCredentials(
+      String username, String password, String expectedMessage) {
     LoginPage loginPage = openLoginPage();
 
-    loginPage.enterUsername("invalid-user");
-    loginPage.enterPassword("SuperSecretPassword!");
+    loginPage.enterUsername(username);
+    loginPage.enterPassword(password);
     loginPage.submit();
 
     assertTrue(
-        loginPage.getFlashMessage().contains("Your username is invalid!"),
-        "Invalid username error message should be displayed");
-  }
-
-  @Test
-  void shouldShowErrorMessageWithInvalidPassword() {
-    LoginPage loginPage = openLoginPage();
-
-    loginPage.enterUsername("tomsmith");
-    loginPage.enterPassword("invalid-password");
-    loginPage.submit();
-
-    assertTrue(
-        loginPage.getFlashMessage().contains("Your password is invalid!"),
-        "Invalid password error message should be displayed");
+        loginPage.getFlashMessage().contains(expectedMessage),
+        "Expected login error message should be displayed");
   }
 
   private LoginPage openLoginPage() {
