@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.showcase.pages.LoginPage;
 import java.util.stream.Stream;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -20,6 +21,8 @@ class LoginTest extends BaseTest {
   private static final String INVALID_PASSWORD_MESSAGE = "Your password is invalid!";
 
   @Test
+  @Tag("smoke")
+  @Tag("login")
   void shouldLoginWithValidCredentials() {
     LoginPage loginPage = openLoginPage();
 
@@ -34,6 +37,8 @@ class LoginTest extends BaseTest {
 
   @ParameterizedTest(name = "username={0}, expectedMessage={2}")
   @MethodSource("invalidLoginScenarios")
+  @Tag("regression")
+  @Tag("login")
   void shouldShowErrorMessageWithInvalidCredentials(
       String username, String password, String expectedMessage) {
     LoginPage loginPage = openLoginPage();
