@@ -29,7 +29,12 @@ jobs:
           java-version: 17
           cache: maven
 
-      - name: Run tests on ${{ matrix.browser }}
+      - name: Run smoke tests on ${{ matrix.browser }}
+        if: github.event_name == 'pull_request'
+        run: mvn clean test -Dgroups=smoke -Dbrowser=${{ matrix.browser }} -Dheadless=true
+
+      - name: Run full suite on ${{ matrix.browser }}
+        if: github.event_name == 'push'
         run: mvn clean test -Dbrowser=${{ matrix.browser }} -Dheadless=true
 
       - name: Upload screenshots
