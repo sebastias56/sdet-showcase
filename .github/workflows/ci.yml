@@ -9,6 +9,25 @@ on:
       - main
   schedule:
     - cron: '0 6 * * *'
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: Test suite to run
+        required: true
+        default: smoke
+        type: choice
+        options:
+          - smoke
+          - full
+      browser:
+        description: Browser to run
+        required: true
+        default: chrome
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - all
 
 jobs:
   test:
@@ -22,9 +41,11 @@ jobs:
 
     steps:
       - name: Checkout repository
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.browser == 'all' || github.event.inputs.browser == matrix.browser
         uses: actions/checkout@v4
 
       - name: Set up Java 17
+        if: github.event_name != 'workflow_dispatch' || github.event.inputs.browser == 'all' || github.event.inputs.browser == matrix.browser
         uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -39,8 +60,16 @@ jobs:
         if: github.event_name == 'push' || github.event_name == 'schedule'
         run: mvn clean test -Dbrowser=${{ matrix.browser }} -Dheadless=true
 
+      - name: Run manual smoke tests on ${{ matrix.browser }}
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.suite == 'smoke' && (github.event.inputs.browser == 'all' || github.event.inputs.browser == matrix.browser)
+        run: mvn clean test -Dgroups=smoke -Dbrowser=${{ matrix.browser }} -Dheadless=true
+
+      - name: Run manual full suite on ${{ matrix.browser }}
+        if: github.event_name == 'workflow_dispatch' && github.event.inputs.suite == 'full' && (github.event.inputs.browser == 'all' || github.event.inputs.browser == matrix.browser)
+        run: mvn clean test -Dbrowser=${{ matrix.browser }} -Dheadless=true
+
       - name: Upload screenshots
-        if: failure()
+        if: failure() && (github.event_name != 'workflow_dispatch' || github.event.inputs.browser == 'all' || github.event.inputs.browser == matrix.browser)
         uses: actions/upload-artifact@v4
         with:
           name: screenshots-${{ matrix.browser }}
