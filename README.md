@@ -148,8 +148,8 @@ Local execution uses Firefox and visible browser mode by default.
 
 Smoke tests cover:
 
-- core browser and login flows;
-- basic framework execution checks.
+- loading the practice home page;
+- logging in with valid credentials.
 
 Run with:
 
