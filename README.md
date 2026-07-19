@@ -149,7 +149,7 @@ Local execution uses Firefox and visible browser mode by default.
 Smoke tests cover:
 
 - loading the practice home page;
-- logging in with valid credentials.
+- completing a valid login and logout flow.
 
 Run with:
 

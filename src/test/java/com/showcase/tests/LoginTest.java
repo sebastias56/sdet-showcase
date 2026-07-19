@@ -3,6 +3,7 @@ package com.showcase.tests;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.showcase.pages.LoginPage;
+import com.showcase.pages.SecureAreaPage;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -17,22 +18,29 @@ class LoginTest extends BaseTest {
   private static final String INVALID_USERNAME = "invalid-user";
   private static final String INVALID_PASSWORD = "invalid-password";
   private static final String SUCCESS_LOGIN_MESSAGE = "You logged into a secure area!";
+  private static final String SUCCESS_LOGOUT_MESSAGE = "You logged out of the secure area!";
   private static final String INVALID_USERNAME_MESSAGE = "Your username is invalid!";
   private static final String INVALID_PASSWORD_MESSAGE = "Your password is invalid!";
 
   @Test
   @Tag("smoke")
   @Tag("login")
-  void shouldLoginWithValidCredentials() {
+  void shouldCompleteValidLoginAndLogoutFlow() {
     LoginPage loginPage = openLoginPage();
 
-    loginPage.enterUsername(VALID_USERNAME);
-    loginPage.enterPassword(VALID_PASSWORD);
-    loginPage.submit();
+    SecureAreaPage secureAreaPage = loginPage.login(VALID_USERNAME, VALID_PASSWORD);
 
+    assertTrue(secureAreaPage.isLoaded(), "Secure area page should be loaded");
     assertTrue(
-        loginPage.getFlashMessage().contains(SUCCESS_LOGIN_MESSAGE),
+        secureAreaPage.getFlashMessage().contains(SUCCESS_LOGIN_MESSAGE),
         "Success login message should be displayed");
+
+    LoginPage returnedLoginPage = secureAreaPage.logout();
+
+    assertTrue(returnedLoginPage.isLoaded(), "Login page should be loaded after logout");
+    assertTrue(
+        returnedLoginPage.getFlashMessage().contains(SUCCESS_LOGOUT_MESSAGE),
+        "Success logout message should be displayed");
   }
 
   @ParameterizedTest(name = "username={0}, expectedMessage={2}")
