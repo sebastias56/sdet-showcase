@@ -32,6 +32,13 @@ public class LoginPage extends BasePage {
     click(loginButton);
   }
 
+  public SecureAreaPage login(String username, String password) {
+    enterUsername(username);
+    enterPassword(password);
+    submit();
+    return new SecureAreaPage(driver);
+  }
+
   public String getFlashMessage() {
     return getText(flashMessage);
   }
